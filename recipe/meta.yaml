@@ -1,0 +1,53 @@
+{% set name = "effdet" %}
+{% set version = "0.4.1" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/effdet-{{ version }}.tar.gz
+  sha256: ac5589fd304a5650c201986b2ef5f8e10c111093a71b1c49fa6b8817710812b5
+
+build:
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+  skip: True  # [py<39]
+
+requirements:
+  host:
+    - python
+    - pip
+    - wheel
+    - setuptools
+  run:
+    - python
+    - pytorch >=1.12.1
+    - torchvision
+    - timm >=0.9.2
+    - pycocotools >=2.0.2
+    - omegaconf >=2.0
+
+test:
+  imports:
+    - effdet
+  commands:
+    - pip check
+  requires:
+    - pip
+    # pip check - pycocotools 2.0.8 requires matplotlib, which is not installed.
+    - matplotlib-base
+
+about:
+  home: https://github.com/rwightman/efficientdet-pytorch
+  summary: EfficientDet for PyTorch
+  license: Apache-2.0
+  license_file: LICENSE
+  license_family: Apache
+  dev_url: https://github.com/rwightman/efficientdet-pytorch
+  doc_url: https://github.com/rwightman/efficientdet-pytorch/blob/master/README.md
+  description: A PyTorch implementation of EfficientDet.
+
+extra:
+  recipe-maintainers:
+    - snegireff
